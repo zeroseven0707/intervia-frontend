@@ -7,8 +7,10 @@ import { useLogout } from '@/lib/hooks/useAuth'
 import { cn } from '@/lib/utils/cn'
 
 const NAV = [
-  { href: '/dashboard',      label: 'Dashboard' },
+  { href: '/dashboard',       label: 'Dashboard' },
   { href: '/interview/setup', label: 'New Interview' },
+  { href: '/sessions',        label: 'History' },
+  { href: '/learning',        label: 'Learning' },
 ]
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
