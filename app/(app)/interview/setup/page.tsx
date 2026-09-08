@@ -43,6 +43,7 @@ function AnalysisPreview({ analysis }: { analysis: JobAnalysis }) {
 }
 
 function ConfigFields({ register }: { register: any }) {
+  const selectCls = 'w-full rounded-xl border border-gray-200 bg-white text-gray-900 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all appearance-none cursor-pointer'
   return (
     <div className="grid grid-cols-3 gap-3">
       {[
@@ -51,8 +52,8 @@ function ConfigFields({ register }: { register: any }) {
         { name: 'experience_level', label: 'Level', opts: [['','Auto'],['junior','Junior'],['mid','Mid'],['senior','Senior'],['lead','Lead']] },
       ].map(f => (
         <div key={f.name}>
-          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{f.label}</label>
-          <select {...register(f.name)} className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:bg-white transition-all">
+          <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">{f.label}</label>
+          <select {...register(f.name)} className={selectCls}>
             {f.opts.map(([v,l]) => <option key={v} value={v}>{l}</option>)}
           </select>
         </div>
@@ -77,8 +78,15 @@ function PositionPath() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <input type="hidden" {...register('path')} />
       <div>
-        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Position</label>
-        <select {...register('position_id')} disabled={isLoading} className={cn('w-full rounded-xl border bg-gray-50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:bg-white transition-all', errors.position_id ? 'border-red-300' : 'border-gray-200')}>
+        <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">Position</label>
+        <select
+          {...register('position_id')}
+          disabled={isLoading}
+          className={cn(
+            'w-full rounded-xl border bg-white text-gray-900 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all appearance-none cursor-pointer',
+            errors.position_id ? 'border-red-300' : 'border-gray-200'
+          )}
+        >
           <option value="">Select a position…</option>
           {positions?.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
         </select>
@@ -110,12 +118,15 @@ function JdPath() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <input type="hidden" {...register('path')} />
       <div>
-        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Job Description</label>
+        <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">Job Description</label>
         <textarea
           {...register('job_description')}
           rows={6}
           placeholder="Paste the full job description here…"
-          className={cn('w-full rounded-xl border px-4 py-3 text-sm placeholder-gray-400 bg-gray-50 resize-none focus:outline-none focus:ring-2 focus:ring-gray-900 focus:bg-white transition-all', errors.job_description ? 'border-red-300' : 'border-gray-200')}
+          className={cn(
+            'w-full rounded-xl border px-4 py-3 text-sm text-gray-900 placeholder-gray-400 bg-white resize-none focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all',
+            errors.job_description ? 'border-red-300' : 'border-gray-200'
+          )}
         />
         {errors.job_description && <p className="mt-1 text-xs text-red-600">{errors.job_description.message}</p>}
         <button type="button" onClick={handleAnalyze} disabled={analyzeJob.isPending} className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-700 disabled:opacity-50 transition-colors">
@@ -141,7 +152,7 @@ function SubmitBtn({ loading, error }: { loading: boolean; error?: string }) {
 }
 
 export default function InterviewSetupPage() {
-  const [tab, setTab] = useState<'jd' | 'position'>('jd')
+  const [tab, setTab] = useState<'jd' | 'position'>('position')
   return (
     <div className="max-w-xl mx-auto">
       <div className="mb-6">
@@ -151,7 +162,7 @@ export default function InterviewSetupPage() {
       <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
         {/* Tabs */}
         <div className="flex gap-1 mb-6 bg-gray-100 rounded-xl p-1">
-          {[['jd','Paste Job Description'],['position','Pick a Position']].map(([v,l]) => (
+          {[['position','Pick a Position'],['jd','Paste Job Description']].map(([v,l]) => (
             <button key={v} type="button" onClick={() => setTab(v as any)}
               className={cn('flex-1 rounded-lg py-2 text-sm font-semibold transition-all', tab === v ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700')}>
               {l}

@@ -176,7 +176,7 @@ export interface LearningRecommendation {
 
 export interface DashboardSession {
   id: number
-  position: string          // backend returns name string, not object
+  position: string
   mode: InterviewMode
   status: InterviewStatus
   overall_score: number | null
@@ -185,12 +185,22 @@ export interface DashboardSession {
 
 export interface DashboardData {
   readiness_score: number | null
-  latest_score: number | null
-  previous_score: number | null
-  score_trend: number | null
-  weak_skills: SkillGap[]
+  latest_score:    number | null
+  previous_score:  number | null
+  score_trend:     number | null
+  weak_skills:     SkillGap[]
   recent_sessions: DashboardSession[]
   recommendations: LearningRecommendation[]
+}
+
+// ─── Profile ─────────────────────────────────────────────────────────────────
+
+export interface ProfileStats {
+  total_sessions:     number
+  completed_sessions: number
+  average_score:      number | null
+  best_score:         number | null
+  skills_tracked:     number
 }
 
 // ─── API Responses ───────────────────────────────────────────────────────────

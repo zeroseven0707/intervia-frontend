@@ -46,8 +46,8 @@ export default function LoginPage() {
             {...register('email')}
             placeholder="you@example.com"
             className={cn(
-              'w-full rounded-xl border px-4 py-3 text-sm text-gray-900 placeholder-gray-400 bg-gray-50',
-              'focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent focus:bg-white transition-all',
+              'w-full rounded-xl border px-4 py-3 text-sm text-gray-900 placeholder-gray-400 bg-white',
+              'focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all',
               errors.email ? 'border-red-300 bg-red-50' : 'border-gray-200'
             )}
           />
@@ -63,8 +63,8 @@ export default function LoginPage() {
             {...register('password')}
             placeholder="••••••••"
             className={cn(
-              'w-full rounded-xl border px-4 py-3 text-sm text-gray-900 placeholder-gray-400 bg-gray-50',
-              'focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent focus:bg-white transition-all',
+              'w-full rounded-xl border px-4 py-3 text-sm text-gray-900 placeholder-gray-400 bg-white',
+              'focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all',
               errors.password ? 'border-red-300 bg-red-50' : 'border-gray-200'
             )}
           />

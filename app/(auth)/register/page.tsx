@@ -45,8 +45,8 @@ export default function RegisterPage() {
   const onSubmit = (data: FormData) => register_.mutate(data)
 
   const inputCls = (hasError?: boolean) => cn(
-    'w-full rounded-xl border px-4 py-3 text-sm text-gray-900 placeholder-gray-400 bg-gray-50',
-    'focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent focus:bg-white transition-all',
+    'w-full rounded-xl border px-4 py-3 text-sm text-gray-900 placeholder-gray-400 bg-white',
+    'focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all',
     hasError ? 'border-red-300 bg-red-50' : 'border-gray-200'
   )
 
