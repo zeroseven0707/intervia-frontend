@@ -143,7 +143,7 @@ function FeatureCard({ icon, title, desc }: { icon: string; title: string; desc:
 
 // ── Main component ─────────────────────────────────────────────────────────
 export default function LandingPage() {
-  const { isAuthenticated } = useAuthStore()
+  const { isAuthenticated, user } = useAuthStore()
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -151,6 +151,8 @@ export default function LandingPage() {
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  const dashboardHref = user?.role === 'admin' ? '/admin' : '/dashboard'
 
   const typed = useTypingEffect([
     'Product Manager',
@@ -205,7 +207,7 @@ export default function LandingPage() {
           </div>
           <div className="flex items-center gap-2">
             {isAuthenticated ? (
-              <Link href="/dashboard" className="text-sm font-semibold bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+              <Link href={dashboardHref} className="text-sm font-semibold bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
                 Dashboard →
               </Link>
             ) : (

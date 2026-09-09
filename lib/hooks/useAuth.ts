@@ -1,17 +1,24 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { authApi, type LoginPayload, type RegisterPayload } from '@/lib/api/auth'
 import { useAuthStore } from '@/lib/store/authStore'
+
+function defaultHomeForRole(role: string): string {
+  return role === 'admin' ? '/admin' : '/dashboard'
+}
 
 export function useLogin() {
   const { setAuth } = useAuthStore()
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   return useMutation({
     mutationFn: (payload: LoginPayload) => authApi.login(payload),
     onSuccess: ({ data }) => {
       setAuth(data.data.user, data.data.token)
-      router.push('/dashboard')
+      const redirect = searchParams.get('redirect')
+      const fallback = defaultHomeForRole(data.data.user.role)
+      router.push(redirect && redirect !== '/login' && redirect !== '/register' ? redirect : fallback)
     },
   })
 }
@@ -24,7 +31,7 @@ export function useRegister() {
     mutationFn: (payload: RegisterPayload) => authApi.register(payload),
     onSuccess: ({ data }) => {
       setAuth(data.data.user, data.data.token)
-      router.push('/dashboard')
+      router.push(defaultHomeForRole(data.data.user.role))
     },
   })
 }
@@ -54,3 +61,4 @@ export function useMe() {
     staleTime: 5 * 60 * 1000, // 5 min
   })
 }
+

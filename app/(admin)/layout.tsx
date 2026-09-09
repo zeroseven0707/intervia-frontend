@@ -7,11 +7,13 @@ import { useLogout } from '@/lib/hooks/useAuth'
 import { cn } from '@/lib/utils/cn'
 
 const NAV = [
-  { href: '/admin',          label: 'Overview',   icon: '◎' },
+  { href: '/admin',          label: 'Overview',    icon: '◎' },
   { href: '/admin/users',    label: 'Users',       icon: '◈' },
   { href: '/admin/positions',label: 'Positions',   icon: '⬡' },
   { href: '/admin/skills',   label: 'Skills',      icon: '△' },
   { href: '/admin/sources',  label: 'Sources',     icon: '↗' },
+  { href: '/admin/packages', label: 'Packages',    icon: '◆' },
+  { href: '/admin/payment',  label: 'Payment',     icon: '⌗' },
   { href: '/admin/ai',       label: 'AI Models',   icon: '✦' },
 ]
 
@@ -60,15 +62,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
 
-        {/* Bottom — user + back link */}
+        {/* Bottom — sign out */}
         <div className="px-3 py-4 border-t border-gray-100 space-y-1">
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-all"
-          >
-            <span className="text-base leading-none">←</span>
-            Back to App
-          </Link>
           <button
             onClick={() => logout.mutate()}
             disabled={logout.isPending}

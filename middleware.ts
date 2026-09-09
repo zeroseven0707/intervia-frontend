@@ -4,6 +4,7 @@ import type { NextRequest } from 'next/server'
 const PUBLIC_ROUTES = ['/login', '/register', '/']
 const AUTH_ROUTES   = ['/login', '/register']
 const ADMIN_ROUTES  = ['/admin']
+const APP_ROUTES    = ['/dashboard', '/sessions', '/interview', '/learning', '/profile']
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -14,26 +15,37 @@ export function middleware(request: NextRequest) {
   const isRoot   = pathname === '/'
   const isAuth   = AUTH_ROUTES.some((r) => pathname.startsWith(r))
   const isAdmin  = ADMIN_ROUTES.some((r) => pathname.startsWith(r))
+  const isApp    = APP_ROUTES.some((r) => pathname.startsWith(r))
   const isPublic = PUBLIC_ROUTES.some((r) => pathname === r)
 
-  // Root landing page — always accessible
+  // ── 1. ROOT LANDING PAGE: redirect logged-in users to role home ──────
+  if (isRoot && token) {
+    const target = role === 'admin' ? '/admin' : '/dashboard'
+    return NextResponse.redirect(new URL(target, request.url))
+  }
   if (isRoot) return NextResponse.next()
 
-  // Logged-in users should not see login/register
+  // ── 2. Logged-in users accessing login/register → go to role home ────
   if (token && isAuth) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+    const target = role === 'admin' ? '/admin' : '/dashboard'
+    return NextResponse.redirect(new URL(target, request.url))
   }
 
-  // Protected routes require a token
+  // ── 3. Non-logged users: all non-public → send to login ──────────────
   if (!token && !isPublic) {
     const loginUrl = new URL('/login', request.url)
     loginUrl.searchParams.set('redirect', pathname)
     return NextResponse.redirect(loginUrl)
   }
 
-  // Admin routes require admin role
+  // ── 4. USER (non-admin) trying to access /admin/* → block to /dashboard
   if (isAdmin && role !== 'admin') {
     return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
+
+  // ── 5. ADMIN trying to access user routes → force back to /admin ─────
+  if (isApp && role === 'admin') {
+    return NextResponse.redirect(new URL('/admin', request.url))
   }
 
   return NextResponse.next()
