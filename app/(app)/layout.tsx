@@ -78,6 +78,16 @@ function ProfileDropdown({ user, onClose }: { user: any; onClose: () => void }) 
           <span className="text-base">◷</span>
           Interview History
         </Link>
+        {user.role === 'admin' && (
+          <Link
+            href="/admin"
+            onClick={onClose}
+            className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
+          >
+            <span className="text-base">◈</span>
+            Admin Panel
+          </Link>
+        )}
       </div>
 
       {/* Logout */}

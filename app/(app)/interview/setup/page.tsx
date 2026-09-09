@@ -13,7 +13,10 @@ import type { Position, JobAnalysis } from '@/types'
 const baseSchema = z.object({
   mode:             z.enum(['practice', 'simulation', 'challenging']),
   question_count:   z.coerce.number().min(3).max(15),
-  experience_level: z.enum(['junior', 'mid', 'senior', 'lead']).optional(),
+  experience_level: z.preprocess(
+    v => (v === '' || v === null || v === undefined ? undefined : v),
+    z.enum(['junior', 'mid', 'senior', 'lead']).optional()
+  ),
 })
 const positionSchema = baseSchema.extend({ path: z.literal('position'), position_id: z.coerce.number().min(1, 'Select a position') })
 const jdSchema       = baseSchema.extend({ path: z.literal('jd'), job_description: z.string().min(50, 'Paste at least 50 characters') })

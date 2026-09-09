@@ -20,15 +20,17 @@ export const useAuthStore = create<AuthState>()(
 
       setAuth: (user, token) => {
         localStorage.setItem('intervia_token', token)
-        // Also set a cookie so Next.js middleware can read it
+        // Also set cookies so Next.js middleware can read them
         document.cookie = `intervia_token=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
+        document.cookie = `intervia_role=${user.role}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
         set({ user, token, isAuthenticated: true })
       },
 
       clearAuth: () => {
         localStorage.removeItem('intervia_token')
-        // Clear the cookie
+        // Clear cookies
         document.cookie = 'intervia_token=; path=/; max-age=0'
+        document.cookie = 'intervia_role=; path=/; max-age=0'
         set({ user: null, token: null, isAuthenticated: false })
       },
 

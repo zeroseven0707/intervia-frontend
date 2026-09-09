@@ -144,18 +144,27 @@ function FeatureCard({ icon, title, desc }: { icon: string; title: string; desc:
 // ── Main component ─────────────────────────────────────────────────────────
 export default function LandingPage() {
   const { isAuthenticated } = useAuthStore()
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 10)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   const typed = useTypingEffect([
-    'Fullstack Developer',
-    'Frontend Developer',
+    'Product Manager',
     'Data Analyst',
-    'Backend Developer',
     'UI/UX Designer',
-    'any role you want.',
+    'Digital Marketer',
+    'Backend Developer',
+    'posisi apapun yang kamu mau.',
   ])
 
   const ROLES = [
-    'Web Developer', 'Fullstack Developer', 'Frontend Developer',
-    'Backend Developer', 'Data Analyst', 'UI/UX Designer', 'Sales', 'Marketing',
+    'Product Manager', 'Data Analyst', 'UI/UX Designer', 'Digital Marketer',
+    'Backend Developer', 'Business Analyst', 'HR Specialist', 'Content Strategist',
+    'Frontend Developer', 'Sales Executive', 'Finance Analyst', 'Project Manager',
   ]
 
   return (
@@ -175,15 +184,24 @@ export default function LandingPage() {
       </div>
 
       {/* ── Navbar ───────────────────────────────────────────────────────── */}
-      <nav className="relative z-10 sticky top-0 bg-white/90 backdrop-blur-md border-b border-gray-100">
+      <nav
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        style={{
+          background: scrolled ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0)',
+          backdropFilter: scrolled ? 'blur(16px) saturate(180%)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(16px) saturate(180%)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(0,0,0,0.06)' : '1px solid transparent',
+          boxShadow: scrolled ? '0 1px 20px rgba(0,0,0,0.04)' : 'none',
+        }}
+      >
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="font-bold text-lg tracking-tight text-gray-900">Intervia</span>
             <span className="w-1.5 h-1.5 rounded-full bg-red-500 mt-0.5" />
           </div>
           <div className="hidden sm:flex items-center gap-6">
-            <a href="#how-it-works" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">How it works</a>
-            <a href="#features" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Features</a>
+            <a href="#how-it-works" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Cara kerja</a>
+            <a href="#features" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Fitur</a>
           </div>
           <div className="flex items-center gap-2">
             {isAuthenticated ? (
@@ -193,10 +211,10 @@ export default function LandingPage() {
             ) : (
               <>
                 <Link href="/login" className="text-sm text-gray-600 hover:text-gray-900 px-3 py-2 transition-colors">
-                  Sign in
+                  Masuk
                 </Link>
                 <Link href="/register" className="text-sm font-semibold bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
-                  Get started
+                  Mulai gratis
                 </Link>
               </>
             )}
@@ -205,7 +223,7 @@ export default function LandingPage() {
       </nav>
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <section className="relative z-10 pt-20 pb-16 px-6">
+      <section className="relative z-10 pt-36 pb-16 px-6">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
           <div
@@ -213,7 +231,7 @@ export default function LandingPage() {
             style={{ background: 'linear-gradient(135deg, #fff 0%, #f9fafb 100%)' }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-            AI-powered interview preparation
+            Persiapan wawancara berbasis AI
           </div>
 
           {/* Headline */}
@@ -221,7 +239,7 @@ export default function LandingPage() {
             className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-none mb-6 animate-fade-up delay-100 opacity-0"
             style={{ letterSpacing: '-0.04em' }}
           >
-            Prepare for your<br />
+            Persiapkan dirimu untuk<br />
             <span className="relative inline-block">
               <span className="text-gray-900">{typed}</span>
               <span className="animate-blink-cursor text-gray-400">|</span>
@@ -231,8 +249,8 @@ export default function LandingPage() {
           </h1>
 
           <p className="text-lg text-gray-500 leading-relaxed max-w-xl mx-auto mb-10 animate-fade-up delay-300 opacity-0">
-            Paste any real job vacancy. AI extracts the skills, conducts an adaptive interview,
-            scores every answer, and tells you exactly what to study next.
+            Tempel lowongan kerja nyata apapun. AI mengekstrak skill yang dibutuhkan, melakukan wawancara adaptif,
+            memberi skor setiap jawaban, dan memberi tahu kamu apa yang perlu dipelajari berikutnya.
           </p>
 
           {/* CTAs */}
@@ -241,14 +259,14 @@ export default function LandingPage() {
               href="/register"
               className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gray-900 text-white font-semibold px-7 py-3.5 rounded-xl hover:bg-gray-700 transition-all duration-200 hover:-translate-y-0.5"
             >
-              Start for free
+              Mulai gratis
               <span className="text-gray-400">→</span>
             </Link>
             <a
               href="#how-it-works"
               className="w-full sm:w-auto flex items-center justify-center gap-2 border border-gray-200 text-gray-700 font-medium px-7 py-3.5 rounded-xl hover:border-gray-400 hover:bg-gray-50 transition-all duration-200"
             >
-              See how it works
+              Lihat cara kerjanya
             </a>
           </div>
 
@@ -270,44 +288,77 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Report preview card ───────────────────────────────────────────── */}
+      {/* ── Dashboard preview card ────────────────────────────────────────── */}
       <section className="relative z-10 pb-24 px-6">
-        <Reveal className="max-w-lg mx-auto">
+        <Reveal className="max-w-xl mx-auto">
           <div
-            className="rounded-2xl border border-gray-200 overflow-hidden shadow-lg animate-float"
+            className="rounded-2xl border border-gray-200 overflow-hidden animate-float bg-white"
             style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.08)' }}
           >
-            {/* Card header */}
-            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white">
-              <div>
-                <div className="text-sm font-semibold text-gray-900">Fullstack Developer</div>
-                <div className="text-xs text-gray-400 mt-0.5">8 questions · Simulation</div>
+            {/* ── Header: profil kandidat ── */}
+            <div className="px-6 pt-6 pb-5 border-b border-gray-100">
+              <div className="flex items-center gap-4">
+                {/* Avatar */}
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shrink-0"
+                  style={{ background: 'linear-gradient(135deg, #3b82f6, #6366f1)' }}
+                >
+                  AR
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold text-gray-900 text-sm">Arya Ramadhan</div>
+                  <div className="text-xs text-gray-500 mt-0.5">Senior Product Manager · 5 thn pengalaman</div>
+                  <div className="flex items-center gap-2 mt-1.5">
+                    <span className="text-xs bg-blue-50 text-blue-600 border border-blue-100 px-2 py-0.5 rounded-full font-medium">Aktif Melamar</span>
+                    <span className="text-xs text-gray-400">3 sesi selesai</span>
+                  </div>
+                </div>
+                {/* Overall score */}
+                <div className="text-right shrink-0">
+                  <div
+                    className="text-3xl font-black leading-none"
+                    style={{ background: 'linear-gradient(135deg, #3b82f6, #6366f1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+                  >
+                    78
+                  </div>
+                  <div className="text-xs text-gray-400 mt-0.5">skor siap</div>
+                </div>
               </div>
-              <div className="text-right">
-                <div className="text-3xl font-black text-gray-900 leading-none">68</div>
-                <div className="text-xs text-gray-400">/100</div>
-              </div>
             </div>
 
-            {/* Scores */}
-            <div className="px-6 py-5 space-y-3 bg-white">
-              <ScoreBar label="Laravel"       score={84} color="#3b82f6" delay={0} />
-              <ScoreBar label="Vue.js"         score={77} color="#6366f1" delay={100} />
-              <ScoreBar label="REST API"       score={81} color="#3b82f6" delay={200} />
-              <ScoreBar label="System Design"  score={58} color="#ef4444" delay={300} />
-              <ScoreBar label="Authentication" score={62} color="#f59e0b" delay={400} />
+            {/* ── Target posisi ── */}
+            <div className="px-6 py-3 border-b border-gray-100 flex items-center gap-3 bg-gray-50/60">
+              <span className="text-xs text-gray-400">Target posisi</span>
+              <span className="text-xs font-semibold text-gray-700">Senior Product Manager — Startup Fintech</span>
+              <span className="ml-auto text-xs text-green-600 font-medium">✓ Cocok</span>
             </div>
 
-            {/* Tags */}
-            <div className="px-6 pb-5 flex gap-2 bg-white">
-              <span className="text-xs border border-red-100 bg-red-50 text-red-600 px-2.5 py-1 rounded-full font-medium">System Design — Weak</span>
-              <span className="text-xs border border-yellow-100 bg-yellow-50 text-yellow-700 px-2.5 py-1 rounded-full font-medium">Auth — Needs Work</span>
+            {/* ── Kompetensi breakdown ── */}
+            <div className="px-6 py-5 space-y-3">
+              <ScoreBar label="Riset Pengguna"  score={88} color="#3b82f6" delay={0} />
+              <ScoreBar label="Prioritisasi"     score={81} color="#6366f1" delay={80} />
+              <ScoreBar label="Komunikasi"       score={85} color="#3b82f6" delay={160} />
+              <ScoreBar label="Analisis Data"    score={59} color="#ef4444" delay={240} />
+              <ScoreBar label="Strategi Produk"  score={66} color="#f59e0b" delay={320} />
             </div>
 
-            {/* Footer */}
+            {/* ── Insight & rekomendasi ── */}
+            <div className="px-6 pb-5 flex flex-wrap gap-2">
+              <span className="text-xs border border-red-100 bg-red-50 text-red-600 px-2.5 py-1 rounded-full font-medium">Analisis Data — Perlu Diperkuat</span>
+              <span className="text-xs border border-yellow-100 bg-yellow-50 text-yellow-700 px-2.5 py-1 rounded-full font-medium">Strategi Produk — Cukup</span>
+              <span className="text-xs border border-green-100 bg-green-50 text-green-700 px-2.5 py-1 rounded-full font-medium">Komunikasi — Kuat</span>
+            </div>
+
+            {/* ── Footer progress ── */}
             <div className="px-6 py-3 border-t border-gray-100 flex items-center justify-between bg-gray-50">
-              <span className="text-xs text-gray-400">After studying Laravel auth →</span>
-              <span className="text-sm font-black text-gray-900">81 <span className="text-xs font-normal text-green-600">+13</span></span>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-green-400" />
+                <span className="text-xs text-gray-500">Skor naik sejak sesi pertama</span>
+              </div>
+              <span className="text-sm font-black text-gray-900">
+                64 <span className="text-gray-300 font-normal mx-1">→</span> 78
+                <span className="text-xs font-normal text-green-600 ml-1">+14</span>
+              </span>
             </div>
           </div>
         </Reveal>
@@ -320,17 +371,17 @@ export default function LandingPage() {
       <section id="how-it-works" className="relative z-10 py-24 px-6">
         <div className="max-w-6xl mx-auto">
           <Reveal className="text-center mb-14">
-            <div className="text-xs font-bold tracking-widest text-blue-600 uppercase mb-3">Process</div>
-            <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-gray-900 mb-4">How it works</h2>
-            <p className="text-gray-500 text-base max-w-md mx-auto">From vacancy to measurable improvement in four steps</p>
+            <div className="text-xs font-bold tracking-widest text-blue-600 uppercase mb-3">Proses</div>
+            <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-gray-900 mb-4">Cara kerjanya</h2>
+            <p className="text-gray-500 text-base max-w-md mx-auto">Dari lowongan ke peningkatan nyata dalam empat langkah</p>
           </Reveal>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { n: '01', title: 'Paste a vacancy', desc: 'Drop any real job description. AI extracts exact skills, seniority, and interview categories.', accent: '#3b82f6' },
-              { n: '02', title: 'Adaptive interview', desc: 'Answer questions tailored to that role. Weak answer? AI follows up. Strong? It moves on.', accent: '#6366f1' },
-              { n: '03', title: 'Get a real score', desc: 'Receive 0–100 with per-skill breakdown, strengths, weaknesses, and an example answer.', accent: '#ef4444' },
-              { n: '04', title: 'Close the gap', desc: 'Follow curated resources for your weakest skills. Retry and watch your score improve.', accent: '#10b981' },
+              { n: '01', title: 'Tempel lowongan', desc: 'Masukkan deskripsi pekerjaan nyata apapun — dari PM hingga developer. AI mengekstrak skill, senioritas, dan topik wawancara yang relevan.', accent: '#3b82f6' },
+              { n: '02', title: 'Wawancara adaptif', desc: 'Jawab pertanyaan yang disesuaikan dengan posisimu. Jawaban kurang tajam? AI menggali lebih dalam. Sudah kuat? Langsung ke topik berikutnya.', accent: '#6366f1' },
+              { n: '03', title: 'Dapatkan skor nyata', desc: 'Terima skor 0–100 dengan rincian per kompetensi, kelebihan, kelemahan, dan contoh jawaban yang lebih baik.', accent: '#ef4444' },
+              { n: '04', title: 'Tutup celah skill', desc: 'Ikuti sumber belajar yang dikurasi sesuai area lemahmu. Coba lagi dan lihat skor kamu meningkat secara konkret.', accent: '#10b981' },
             ].map((s, i) => (
               <Reveal key={s.n} delay={i * 100}>
                 <StepCard {...s} />
@@ -345,10 +396,10 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto px-6">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
             {[
-              { value: '8', label: 'Positions', color: '#3b82f6' },
-              { value: '62', label: 'Skills tracked', color: '#ef4444' },
-              { value: '6', label: 'Score dimensions', color: '#6366f1' },
-              { value: '31', label: 'API endpoints', color: '#10b981' },
+              { value: '8', label: 'Posisi tersedia', color: '#3b82f6' },
+              { value: '62', label: 'Skill dilacak', color: '#ef4444' },
+              { value: '6', label: 'Dimensi penilaian', color: '#6366f1' },
+              { value: '31', label: 'Endpoint API', color: '#10b981' },
             ].map((s, i) => (
               <Reveal key={s.label} delay={i * 80}>
                 <div className="text-4xl font-black tracking-tight mb-1" style={{ color: s.color }}>{s.value}</div>
@@ -363,19 +414,19 @@ export default function LandingPage() {
       <section id="features" className="relative z-10 py-24 px-6">
         <div className="max-w-6xl mx-auto">
           <Reveal className="text-center mb-14">
-            <div className="text-xs font-bold tracking-widest text-red-500 uppercase mb-3">Features</div>
-            <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-gray-900 mb-4">Everything you need</h2>
-            <p className="text-gray-500 text-base max-w-md mx-auto">Built around the full preparation loop</p>
+            <div className="text-xs font-bold tracking-widest text-red-500 uppercase mb-3">Fitur</div>
+            <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-gray-900 mb-4">Semua yang kamu butuhkan</h2>
+            <p className="text-gray-500 text-base max-w-md mx-auto">Dibangun untuk siklus persiapan yang lengkap</p>
           </Reveal>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { icon: '◈', title: 'Any job description', desc: 'Paste the exact vacancy you want. AI adapts every question and evaluation to that specific role.' },
-              { icon: '⟳', title: 'Adaptive questions', desc: 'Questions change based on your answers. Just like a real interviewer adjusting to your level.' },
-              { icon: '◎', title: '6-dimension scoring', desc: 'Relevance, knowledge, clarity, completeness, reasoning, and practical evidence — all measured.' },
-              { icon: '⬡', title: 'Skill gap map', desc: 'See exactly which skills pulled your score down, ranked from weakest to strongest.' },
-              { icon: '↗', title: 'Learning resources', desc: 'Curated YouTube, docs, and articles matched to your exact weak areas.' },
-              { icon: '△', title: 'Track progress', desc: 'Retry the same role after studying. See your score go from 68 to 81 with evidence.' },
+              { icon: '◈', title: 'Lowongan apapun, posisi apapun', desc: 'Dari Product Manager, Data Analyst, Marketing, hingga Software Engineer — tempel lowongan aslinya dan AI menyesuaikan segalanya.' },
+              { icon: '⟳', title: 'Pertanyaan adaptif', desc: 'Pertanyaan berubah sesuai jawabanmu. Persis seperti pewawancara nyata yang membaca situasi dan menggali lebih dalam.' },
+              { icon: '◎', title: 'Penilaian 6 dimensi', desc: 'Relevansi, pengetahuan, kejelasan, kelengkapan, penalaran, dan bukti nyata — semua diukur untuk setiap jawaban.' },
+              { icon: '⬡', title: 'Peta celah kompetensi', desc: 'Lihat persis kompetensi mana yang menurunkan skormu, diurutkan dari yang paling perlu dibenahi.' },
+              { icon: '↗', title: 'Sumber belajar terkurasi', desc: 'Video, artikel, dan dokumentasi yang dipilih sesuai area lemah spesifik kamu — bukan daftar generik.' },
+              { icon: '△', title: 'Pantau perkembanganmu', desc: 'Ulangi sesi setelah belajar dan lihat skormu naik. Bukan sekadar latihan — ada progres yang terukur.' },
             ].map((f, i) => (
               <Reveal key={f.title} delay={i * 80}>
                 <FeatureCard {...f} />
@@ -395,22 +446,22 @@ export default function LandingPage() {
                 <span className="w-3 h-3 rounded-full bg-red-500" />
                 <span className="w-3 h-3 rounded-full bg-yellow-400" />
                 <span className="w-3 h-3 rounded-full bg-green-400" />
-                <span className="ml-3 text-xs text-gray-400 font-mono">Intervia · Interview Session</span>
+                <span className="ml-3 text-xs text-gray-400 font-mono">Intervia · Sesi Wawancara — Product Manager</span>
               </div>
               {/* Content */}
               <div className="bg-gray-950 px-6 py-6 font-mono text-sm space-y-4">
                 <div>
-                  <div className="text-gray-500 text-xs mb-1">AI Interviewer</div>
+                  <div className="text-gray-500 text-xs mb-1">Pewawancara AI</div>
                   <p className="text-gray-200 leading-relaxed">
-                    You mentioned you built a digital office using Laravel.
-                    <span className="text-blue-400"> How did you handle authentication and authorization</span> in that application?
+                    Kamu menyebut pernah me-launch fitur baru di produkmu.
+                    <span className="text-blue-400"> Bagaimana kamu memutuskan fitur mana yang harus diprioritaskan</span> saat ada banyak permintaan dari stakeholder?
                   </p>
                 </div>
                 <div className="border-t border-gray-800 pt-4">
-                  <div className="text-gray-500 text-xs mb-1">Candidate</div>
+                  <div className="text-gray-500 text-xs mb-1">Kandidat</div>
                   <p className="text-gray-400 leading-relaxed">
-                    I used Laravel Sanctum for API token authentication and implemented
-                    role-based middleware for authorization...
+                    Saya menggunakan framework RICE — Reach, Impact, Confidence, Effort — untuk
+                    memberi skor setiap fitur secara objektif dan mendiskusikannya bersama tim...
                   </p>
                 </div>
                 <div className="border-t border-gray-800 pt-4 flex items-center gap-3">
@@ -433,32 +484,32 @@ export default function LandingPage() {
 
         <div className="max-w-2xl mx-auto text-center">
           <Reveal>
-            <div className="text-xs font-bold tracking-widest text-gray-400 uppercase mb-6">Ready to practice?</div>
+            <div className="text-xs font-bold tracking-widest text-gray-400 uppercase mb-6">Siap untuk berlatih?</div>
             <h2 className="text-4xl sm:text-5xl font-black tracking-tighter text-gray-900 mb-6" style={{ letterSpacing: '-0.04em' }}>
-              Get your score<br />
+              Dapatkan skormu<br />
               <span style={{
                 background: 'linear-gradient(135deg, #ef4444, #3b82f6)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
               }}>
-                in 10 minutes.
+                dalam 10 menit.
               </span>
             </h2>
             <p className="text-gray-500 text-base mb-10 max-w-sm mx-auto">
-              Paste your target vacancy and get a full report with skill gaps and learning recommendations.
+              Tempel lowongan yang kamu incar dan dapatkan laporan lengkap berisi celah skill serta rekomendasi belajar.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
                 href="/register"
                 className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gray-900 text-white font-semibold px-8 py-4 rounded-xl text-base hover:bg-gray-700 transition-all duration-200 hover:-translate-y-0.5"
               >
-                Start for free →
+                Mulai gratis →
               </Link>
               <Link
                 href="/login"
                 className="w-full sm:w-auto text-sm text-gray-500 hover:text-gray-900 px-4 py-4 transition-colors"
               >
-                Already have an account? Sign in
+                Sudah punya akun? Masuk
               </Link>
             </div>
           </Reveal>
@@ -471,12 +522,12 @@ export default function LandingPage() {
           <div className="flex items-center gap-2">
             <span className="font-bold text-sm text-gray-900">Intervia</span>
             <span className="w-1 h-1 rounded-full bg-red-500" />
-            <span className="text-xs text-gray-400">AI Interview Preparation</span>
+            <span className="text-xs text-gray-400">Persiapan Wawancara AI</span>
           </div>
           <div className="flex items-center gap-4 text-xs text-gray-400">
-            <a href="#how-it-works" className="hover:text-gray-700 transition-colors">How it works</a>
-            <a href="#features" className="hover:text-gray-700 transition-colors">Features</a>
-            <Link href="/login" className="hover:text-gray-700 transition-colors">Sign in</Link>
+            <a href="#how-it-works" className="hover:text-gray-700 transition-colors">Cara kerja</a>
+            <a href="#features" className="hover:text-gray-700 transition-colors">Fitur</a>
+            <Link href="/login" className="hover:text-gray-700 transition-colors">Masuk</Link>
           </div>
           <div className="text-xs text-gray-400">© 2026 Intervia</div>
         </div>
