@@ -11,6 +11,17 @@ interface AuthState {
   updateUser: (user: User) => void
 }
 
+function ensureCookiesSynced(user: User | null, token: string | null) {
+  if (typeof document === 'undefined') return
+  const week = 60 * 60 * 24 * 7
+  if (token) {
+    document.cookie = `intervia_token=${token}; path=/; max-age=${week}; SameSite=Lax`
+  }
+  if (user?.role) {
+    document.cookie = `intervia_role=${user.role}; path=/; max-age=${week}; SameSite=Lax`
+  }
+}
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
@@ -19,26 +30,31 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
 
       setAuth: (user, token) => {
-        localStorage.setItem('intervia_token', token)
-        // Also set cookies so Next.js middleware can read them
-        document.cookie = `intervia_token=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
-        document.cookie = `intervia_role=${user.role}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
+        ensureCookiesSynced(user, token)
         set({ user, token, isAuthenticated: true })
       },
 
       clearAuth: () => {
-        localStorage.removeItem('intervia_token')
-        // Clear cookies
-        document.cookie = 'intervia_token=; path=/; max-age=0'
-        document.cookie = 'intervia_role=; path=/; max-age=0'
+        if (typeof document !== 'undefined') {
+          document.cookie = 'intervia_token=; path=/; max-age=0'
+          document.cookie = 'intervia_role=; path=/; max-age=0'
+        }
         set({ user: null, token: null, isAuthenticated: false })
       },
 
-      updateUser: (user) => set({ user }),
+      updateUser: (user) => {
+        ensureCookiesSynced(user, useAuthStore.getState().token)
+        set({ user })
+      },
     }),
     {
       name: 'intervia-auth',
       partialize: (state) => ({ user: state.user, token: state.token, isAuthenticated: state.isAuthenticated }),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          ensureCookiesSynced(state.user, state.token)
+        }
+      },
     }
   )
 )

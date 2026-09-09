@@ -26,7 +26,7 @@ export type InterviewStatus =
 
 export type SkillImportance = 'required' | 'preferred'
 
-export type SkillStatus = 'strong' | 'good' | 'needs_work' | 'weak'
+export type SkillStatus = 'strong' | 'good' | 'needs_work' | 'weak' | 'starter' | 'curated'
 
 export type SourceType = 'youtube' | 'article' | 'documentation' | 'pdf'
 
@@ -148,18 +148,21 @@ export interface SkillGap {
 
 export interface LearningSource {
   id: number
-  type: SourceType
-  title: string
+  type: SourceType | string
+  title?: string
   url: string
-  publisher: string
+  publisher: string | null
   author: string | null
+  language?: string | null
+  status?: string | null
 }
 
 export interface LearningMaterial {
   id: number
-  source: LearningSource
+  source: LearningSource | null
+  topic?: { id: number; name: string; slug: string; category: string | null } | null
   title: string
-  summary: string
+  summary: string | null
   duration_seconds: number | null
   difficulty: string | null
   published_at: string | null
@@ -167,8 +170,8 @@ export interface LearningMaterial {
 
 export interface LearningRecommendation {
   skill: string
-  score: number
-  status: SkillStatus
+  score: number | null
+  status: SkillStatus | 'starter' | 'curated'
   materials: LearningMaterial[]
 }
 

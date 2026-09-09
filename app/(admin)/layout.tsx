@@ -31,7 +31,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="w-56 shrink-0 bg-white border-r border-gray-100 flex flex-col sticky top-0 h-screen">
         {/* Logo */}
         <div className="px-5 h-14 flex items-center gap-2 border-b border-gray-100">
-          <Link href="/dashboard" className="flex items-center gap-1.5">
+          <Link href="/admin" className="flex items-center gap-1.5">
             <span className="font-black text-sm text-gray-900 tracking-tight">Intervia</span>
             <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
           </Link>
